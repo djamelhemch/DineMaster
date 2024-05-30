@@ -18,59 +18,39 @@ namespace DineMaster
             InitializeComponent();
         }
 
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Home
+        }
+
+        private void OrdersButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Orders
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to Settings
+        }
+
         private void AddToOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MenuListBox.SelectedItem != null)
-            {
-                OrderListBox.Items.Add(MenuListBox.SelectedItem);
-                UpdateTotal();
-            }
+            // Add selected item to OrderListBox
         }
 
         private void RemoveFromOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            if (OrderListBox.SelectedItem != null)
-            {
-                OrderListBox.Items.Remove(OrderListBox.SelectedItem);
-                UpdateTotal();
-            }
+            // Remove selected item from OrderListBox
         }
 
         private void FinalizeOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Order finalized!");
-            OrderListBox.Items.Clear();
-            UpdateTotal();
+            // Finalize the order
         }
 
-        private void OpenDrawerButton_Click(object sender, RoutedEventArgs e)
+        private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
-            DrawerMenu.Visibility = Visibility.Visible;
-        }
 
-        private void CloseDrawerButton_Click(object sender, RoutedEventArgs e)
-        {
-            DrawerMenu.Visibility = Visibility.Collapsed;
-        }
-
-        private void SettingsTabButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Settings tab clicked!");
-        }
-
-        private void UpdateTotal()
-        {
-            double total = 0;
-            foreach (var item in OrderListBox.Items)
-            {
-                // Example prices
-                if (item.ToString() == "Pizza") total += 12.00;
-                if (item.ToString() == "Burger") total += 8.00;
-                if (item.ToString() == "Salad") total += 5.00;
-                if (item.ToString() == "Pasta") total += 10.00;
-                if (item.ToString() == "Steak") total += 20.00;
-            }
-            TotalTextBlock.Text = $"Total: ${total:0.00}";
         }
     }
 }
