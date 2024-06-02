@@ -82,9 +82,9 @@
 
         <!-- Sidebar Menu -->
         <StackPanel Grid.Column="0" Background="#1E1E1E" Margin="10">
-            <Button Content="Home" Click="HomeButton_Click"/>
-            <Button Content="Orders" Click="OrdersButton_Click"/>
-            <Button Content="Settings" Click="SettingsButton_Click"/>
+            <Button Content="Home" Click="HomeButton_Click" Height="54"/>
+            <Button Content="Orders" Click="OrdersButton_Click" Height="54"/>
+            <Button Content="Settings" Click="SettingsButton_Click" Height="54"/>
         </StackPanel>
 
         <!-- Main Content -->
@@ -97,10 +97,10 @@
             <!-- Search and Category Selection -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
                 <TextBox Width="200" Height="30" Margin="5" Background="#3C3C3E" Foreground="White"/>
-                <Button Content="All" Width="100" Margin="5"/>
-                <Button Content="Starters" Width="100" Margin="5"/>
-                <Button Content="Lunch" Width="100" Margin="5"/>
-                <Button Content="Dinner" Width="100" Margin="5"/>
+                <Button Content="All" Width="100" Margin="5" />
+                <Button Content="Starters" Width="100" Margin="5" Height="54"/>
+                <Button Content="Lunch" Width="100" Margin="5" Height="54"/>
+                <Button Content="Dinner" Width="100" Margin="5" Height="54"/>
             </StackPanel>
 
             <!-- Menu Section -->
@@ -137,8 +137,8 @@
             <TextBlock Text="Order" FontSize="24" FontWeight="Bold" Margin="10"/>
             <ListBox Name="OrderListBox" Background="#2A2A2E" BorderBrush="#372163" BorderThickness="2" Margin="10" Height="400"/>
             <TextBlock Name="TotalTextBlock" Text="Total: $0.00" FontSize="18" FontWeight="Bold" Margin="10"/>
-            <Button Content="Remove from Order" Click="RemoveFromOrderButton_Click" Margin="10"/>
-            <Button Content="Finalize Order" Click="FinalizeOrderButton_Click" Margin="10"/>
+            <Button Content="Remove from Order" Click="RemoveFromOrderButton_Click" Margin="10" Height="54"/>
+            <Button Content="Finalize Order" Click="FinalizeOrderButton_Click" Margin="10" Height="54"/>
         </StackPanel>
     </Grid>
 </Window>
