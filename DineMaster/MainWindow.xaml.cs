@@ -21,21 +21,36 @@ namespace DineMaster
     {
         public List<Category> Categories { get; set; }
     }
+    public class ItemResponse
+    {
+        public List<Item> Items { get; set; }
+    }
 
     public class Category
     {
+        public int Id { get; set; } // Add Id property
         public string category_name { get; set; }
+        // Add any other properties you need
+    }
+    public class Item
+    {
+        public string name { get; set; }
+        public string price { get; set; }
+        public string cover { get; set; }
         // Add any other properties you need
     }
 
     public partial class MainWindow : Window
     {
         public ObservableCollection<Category> Categories { get; set; }
+        public ObservableCollection<Item> Items { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             Categories = new ObservableCollection<Category>();
+            Items = new ObservableCollection<Item>();
+
             DataContext = this; // Set the data context of the window to itself
             FetchCategories();
         }
@@ -46,36 +61,37 @@ namespace DineMaster
             {
                 var response = await httpClient.GetStringAsync("http://127.0.0.1:5000/categories");
                 var deserializedRes = JsonConvert.DeserializeObject<CategoryResponse>(response);
-     
-                Console.WriteLine(deserializedRes);
-
 
                 foreach (var category in deserializedRes.Categories)
                 {
                     Categories.Add(category);
                 }
             }
-
         }
 
-
-/*        private async void FetchItemsByCategory()
+        private async void FetchItemsByCategory(int categoryId)
         {
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetStringAsync("http://127.0.0.1:5000/categories");
-                var deserializedRes = JsonConvert.DeserializeObject<CategoryResponse>(response);
+                var response = await httpClient.GetStringAsync($"http://127.0.0.1:5000/categories/{categoryId}/items");
+                var deserializedRes = JsonConvert.DeserializeObject<ItemResponse>(response);
 
-                Console.WriteLine(deserializedRes);
+                Items.Clear(); // Clear previous items if you want to replace them
 
-
-                foreach (var category in deserializedRes.Categories)
+                foreach (var item in deserializedRes.Items)
                 {
-                    Categories.Add(category);
+                    Items.Add(item);
                 }
             }
+        }
 
-        }*/
+        private void CategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is Category category)
+            {
+                FetchItemsByCategory(category.Id); // Pass the selected category Id
+            }
+        }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
