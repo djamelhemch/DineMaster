@@ -98,11 +98,19 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
                 <TextBox Width="200" Height="30" Margin="5" Background="#3C3C3E" Foreground="White"/>
                 <Button Content="All" Width="100" Margin="5" />
-                <Button Content="Starters" Width="100" Margin="5" Height="54"/>
-                <Button Content="Lunch" Width="100" Margin="5" Height="54"/>
-                <Button Content="Dinner" Width="100" Margin="5" Height="54"/>
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding category_name}" Width="100" Margin="5" Height="54"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </StackPanel>
-
             <!-- Menu Section -->
             <ScrollViewer Grid.Row="1">
                 <WrapPanel>
