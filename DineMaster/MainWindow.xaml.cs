@@ -1,11 +1,19 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Diagnostics;
 
 namespace DineMaster
 {
@@ -13,7 +21,6 @@ namespace DineMaster
     {
         public List<Category> Categories { get; set; }
     }
-
     public class ItemResponse
     {
         public List<Item> Items { get; set; }
@@ -25,40 +32,46 @@ namespace DineMaster
         public string category_name { get; set; }
         // Add any other properties you need
     }
-
     public class Item
     {
         public string name { get; set; }
-        public decimal price { get; set; } // Change to decimal for better currency handling
+        public string price { get; set; }
         public string cover { get; set; }
         // Add any other properties you need
     }
 
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public class Table
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public partial class MainWindow : Window
     {
         public ObservableCollection<Category> Categories { get; set; }
         public ObservableCollection<Item> Items { get; set; }
-        public ObservableCollection<Item> OrderItems { get; set; } // Collection for Order Items
-
-        private decimal totalAmount;
-        public decimal TotalAmount
-        {
-            get { return totalAmount; }
-            set
-            {
-                totalAmount = value;
-                OnPropertyChanged(nameof(TotalAmount));
-            }
-        }
+        public ObservableCollection<Table> Tables { get; set; }
+        public ObservableCollection<Item> OrderItems { get; set; }
+        public decimal TotalAmount { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             Categories = new ObservableCollection<Category>();
             Items = new ObservableCollection<Item>();
+            Tables = new ObservableCollection<Table>
+            {
+                new Table { Id = 1, Name = "Table 1" },
+                new Table { Id = 2, Name = "Table 2" },
+                new Table { Id = 3, Name = "Table 3" },
+                new Table { Id = 4, Name = "Table 4" },
+                new Table { Id = 1, Name = "Table 5" },
+                new Table { Id = 2, Name = "Table 6" },
+                new Table { Id = 3, Name = "Table 7" },
+                new Table { Id = 4, Name = "Table 8" }
+                // Add more tables as needed
+            };
             OrderItems = new ObservableCollection<Item>();
-
-            OrderItems.CollectionChanged += (s, e) => UpdateTotalAmount(); // Update total when the collection changes
 
             DataContext = this; // Set the data context of the window to itself
             FetchCategories();
@@ -104,7 +117,9 @@ namespace DineMaster
 
         private void HomeButton(object sender, RoutedEventArgs e)
         {
-            // Navigate to Home
+            // Hide the tables grid and show the main content grid
+            TablesGrid.Visibility = Visibility.Collapsed;
+            MainContentGrid.Visibility = Visibility.Visible;
         }
 
         private void OrdersButton(object sender, RoutedEventArgs e)
@@ -117,24 +132,28 @@ namespace DineMaster
             // Navigate to Settings
         }
 
-        private void AddToOrderButton(object sender, MouseButtonEventArgs e)
+        private void TablesButton(object sender, RoutedEventArgs e)
+        {
+            // Hide the main content grid and show the tables grid
+            MainContentGrid.Visibility = Visibility.Collapsed;
+            TablesGrid.Visibility = Visibility.Visible;
+        }
+
+        private void AddToOrderButton(object sender, RoutedEventArgs e)
         {
             if (sender is ListBoxItem listBoxItem && listBoxItem.DataContext is Item item)
             {
-                // Add the item to the order
                 OrderItems.Add(item);
-
-                // Optionally, show a message to confirm the addition
-               // MessageBox.Show($"{item.name} has been added to the order.");
+                CalculateTotalAmount();
             }
         }
 
         private void RemoveFromOrderButton(object sender, RoutedEventArgs e)
         {
-            // Remove selected item from OrderListBox
             if (OrderListBox.SelectedItem is Item selectedItem)
             {
                 OrderItems.Remove(selectedItem);
+                CalculateTotalAmount();
             }
         }
 
@@ -143,20 +162,29 @@ namespace DineMaster
             // Finalize the order
         }
 
-        private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
+        private void TableButton_Click(object sender, RoutedEventArgs e)
         {
-            // Handle item selected event if needed
+            if (sender is Button button && button.DataContext is Table table)
+            {
+                //MessageBox.Show($"You have selected {table.Name}.");
+                // Perform any additional actions here, such as storing the selected table
+                // Close the tables view and return to the main content view
+                TablesGrid.Visibility = Visibility.Collapsed;
+                MainContentGrid.Visibility = Visibility.Visible;
+            }
         }
 
-        private void UpdateTotalAmount()
+        private void CalculateTotalAmount()
         {
-            TotalAmount = OrderItems.Sum(item => item.price);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TotalAmount = 0;
+            foreach (var item in OrderItems)
+            {
+                if (decimal.TryParse(item.price, out var price))
+                {
+                    TotalAmount += price;
+                }
+            }
+            TotalTextBlock.Text = $"Total: {TotalAmount:C}";
         }
     }
 }
